@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.LuxianDao">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        a.id as id
+        ,a.jingdain_id as jingdainId
+        ,a.luxian_name as luxianName
+        ,a.luxian_uuid_number as luxianUuidNumber
+        ,a.luxian_photo as luxianPhoto
+        ,a.luxian_address as luxianAddress
+        ,a.luxian_tujing_address as luxianTujingAddress
+        ,a.luxian_mudi_address as luxianMudiAddress
+        ,a.zan_number as zanNumber
+        ,a.cai_number as caiNumber
+        ,a.luxian_types as luxianTypes
+        ,a.luxian_clicknum as luxianClicknum
+        ,a.luxian_content as luxianContent
+        ,a.luxian_delete as luxianDelete
+        ,a.insert_time as insertTime
+        ,a.create_time as createTime
+    </sql>
+    <select id="selectListView" parameterType="map" resultType="com.entity.view.LuxianView" >
+        SELECT
+        <include refid="Base_Column_List" />
+        <!-- 级联表的字段 -->
+        ,jingdain.jingdain_name as jingdainName
+        ,jingdain.jingdain_uuid_number as jingdainUuidNumber
+        ,jingdain.jingdain_photo as jingdainPhoto
+        ,jingdain.jingdain_address as jingdainAddress
+        ,jingdain.zan_number as zanNumber
+        ,jingdain.cai_number as caiNumber
+        ,jingdain.jingdain_types as jingdainTypes
+        ,jingdain.jingdain_kucun_number as jingdainKucunNumber
+        ,jingdain.jingdain_new_money as jingdainNewMoney
+        ,jingdain.jingdain_clicknum as jingdainClicknum
+        ,jingdain.jingdain_content as jingdainContent
+        ,jingdain.jingdain_delete as jingdainDelete
+
+        FROM luxian  a
+        left JOIN jingdain jingdain ON a.jingdain_id = jingdain.id
+
+        <where>
+            <if test="params.ids != null">
+                and a.id in
+                <foreach item="item" index="index" collection="params.ids" open="(" separator="," close=")">
+                #{item}
+                </foreach>
+            </if>
+            <if test="params.jingdainId != null and params.jingdainId != ''">
+                and (
+                    a.jingdain_id = #{params.jingdainId}
+                )
+            </if>
+            <if test=" params.luxianName != '' and params.luxianName != null and params.luxianName != 'null' ">
+                and a.luxian_name like CONCAT('%',#{params.luxianName},'%')
+            </if>
+            <if test=" params.luxianUuidNumber != '' and params.luxianUuidNumber != null and params.luxianUuidNumber != 'null' ">
+                and a.luxian_uuid_number like CONCAT('%',#{params.luxianUuidNumber},'%')
+            </if>
+            <if test=" params.luxianAddress != '' and params.luxianAddress != null and params.luxianAddress != 'null' ">
+                and a.luxian_address like CONCAT('%',#{params.luxianAddress},'%')
+            </if>
+            <if test=" params.luxianTujingAddress != '' and params.luxianTujingAddress != null and params.luxianTujingAddress != 'null' ">
+                and a.luxian_tujing_address like CONCAT('%',#{params.luxianTujingAddress},'%')
+            </if>
+            <if test=" params.luxianMudiAddress != '' and params.luxianMudiAddress != null and params.luxianMudiAddress != 'null' ">
+                and a.luxian_mudi_address like CONCAT('%',#{params.luxianMudiAddress},'%')
+            </if>
+            <if test="params.zanNumberStart != null and params.zanNumberStart != ''">
+                <![CDATA[  and a.zan_number >= #{params.zanNumberStart}   ]]>
+            </if>
+            <if test="params.zanNumberEnd != null and params.zanNumberEnd != ''">
+                <![CDATA[  and a.zan_number <= #{params.zanNumberEnd}   ]]>
+            </if>
+             <if test="params.zanNumber != null and params.zanNumber != ''">
+                and a.zan_number = #{params.zanNumber}
+             </if>
+            <if test="params.caiNumberStart != null and params.caiNumberStart != ''">
+                <![CDATA[  and a.cai_number >= #{params.caiNumberStart}   ]]>
+            </if>
+            <if test="params.caiNumberEnd != null and params.caiNumberEnd != ''">
+                <![CDATA[  and a.cai_number <= #{params.caiNumberEnd}   ]]>
+            </if>
+             <if test="params.caiNumber != null and params.caiNumber != ''">
+                and a.cai_number = #{params.caiNumber}
+             </if>
+            <if test="params.luxianTypes != null and params.luxianTypes != ''">
+                and a.luxian_types = #{params.luxianTypes}
+            </if>
+            <if test="params.luxianClicknumStart != null and params.luxianClicknumStart != ''">
+                <![CDATA[  and a.luxian_clicknum >= #{params.luxianClicknumStart}   ]]>
+            </if>
+            <if test="params.luxianClicknumEnd != null and params.luxianClicknumEnd != ''">
+                <![CDATA[  and a.luxian_clicknum <= #{params.luxianClicknumEnd}   ]]>
+            </if>
+             <if test="params.luxianClicknum != null and params.luxianClicknum != ''">
+                and a.luxian_clicknum = #{params.luxianClicknum}
+             </if>
+            <if test=" params.luxianContent != '' and params.luxianContent != null and params.luxianContent != 'null' ">
+                and a.luxian_content like CONCAT('%',#{params.luxianContent},'%')
+            </if>
+            <if test="params.luxianDeleteStart != null and params.luxianDeleteStart != ''">
+                <![CDATA[  and a.luxian_delete >= #{params.luxianDeleteStart}   ]]>
+            </if>
+            <if test="params.luxianDeleteEnd != null and params.luxianDeleteEnd != ''">
+                <![CDATA[  and a.luxian_delete <= #{params.luxianDeleteEnd}   ]]>
+            </if>
+             <if test="params.luxianDelete != null and params.luxianDelete != ''">
+                and a.luxian_delete = #{params.luxianDelete}
+             </if>
+            <if test=" params.insertTimeStart != '' and params.insertTimeStart != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(a.insert_time) >= UNIX_TIMESTAMP(#{params.insertTimeStart}) ]]>
+            </if>
+            <if test=" params.insertTimeEnd != '' and params.insertTimeEnd != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(a.insert_time) <= UNIX_TIMESTAMP(#{params.insertTimeEnd}) ]]>
+            </if>
+            <if test="params.insertTime != null and params.insertTime != ''">
+                and a.insert_time = #{params.insertTime}
+            </if>
+
+                <!-- 判断景点介绍的id不为空 -->
+            <if test=" params.jingdainIdNotNull != '' and params.jingdainIdNotNull != null and params.jingdainIdNotNull != 'null' ">
+                and a.jingdain_id IS NOT NULL
+            </if>
+            <if test=" params.jingdainName != '' and params.jingdainName != null and params.jingdainName != 'null' ">
+                and jingdain.jingdain_name like CONCAT('%',#{params.jingdainName},'%')
+            </if>
+            <if test=" params.jingdainUuidNumber != '' and params.jingdainUuidNumber != null and params.jingdainUuidNumber != 'null' ">
+                and jingdain.jingdain_uuid_number like CONCAT('%',#{params.jingdainUuidNumber},'%')
+            </if>
+            <if test=" params.jingdainAddress != '' and params.jingdainAddress != null and params.jingdainAddress != 'null' ">
+                and jingdain.jingdain_address like CONCAT('%',#{params.jingdainAddress},'%')
+            </if>
+            <if test="params.zanNumberStart != null  and params.zanNumberStart != '' ">
+                <![CDATA[  and jingdain.zan_number >= #{params.zanNumberStart}   ]]>
+            </if>
+            <if test="params.zanNumberEnd != null  and params.zanNumberEnd != '' ">
+                <![CDATA[  and jingdain.zan_number <= #{params.zanNumberEnd}   ]]>
+            </if>
+            <if test="params.zanNumber != null  and params.zanNumber != '' ">
+                and jingdain.zan_number = #{params.zanNumber}
+            </if>
+            <if test="params.caiNumberStart != null  and params.caiNumberStart != '' ">
+                <![CDATA[  and jingdain.cai_number >= #{params.caiNumberStart}   ]]>
+            </if>
+            <if test="params.caiNumberEnd != null  and params.caiNumberEnd != '' ">
+                <![CDATA[  and jingdain.cai_number <= #{params.caiNumberEnd}   ]]>
+            </if>
+            <if test="params.caiNumber != null  and params.caiNumber != '' ">
+                and jingdain.cai_number = #{params.caiNumber}
+            </if>
+            <if test="params.jingdainTypes != null  and params.jingdainTypes != ''">
+                and jingdain.jingdain_types = #{params.jingdainTypes}
+            </if>
+
+            <if test="params.jingdainKucunNumberStart != null  and params.jingdainKucunNumberStart != '' ">
+                <![CDATA[  and jingdain.jingdain_kucun_number >= #{params.jingdainKucunNumberStart}   ]]>
+            </if>
+            <if test="params.jingdainKucunNumberEnd != null  and params.jingdainKucunNumberEnd != '' ">
+                <![CDATA[  and jingdain.jingdain_kucun_number <= #{params.jingdainKucunNumberEnd}   ]]>
+            </if>
+            <if test="params.jingdainKucunNumber != null  and params.jingdainKucunNumber != '' ">
+                and jingdain.jingdain_kucun_number = #{params.jingdainKucunNumber}
+            </if>
+            <if test="params.jingdainNewMoneyStart != null ">
+                <![CDATA[  and jingdain.jingdain_new_money >= #{params.jingdainNewMoneyStart}   ]]>
+            </if>
+            <if test="params.jingdainNewMoneyEnd != null ">
+                <![CDATA[  and jingdain.jingdain_new_money <= #{params.jingdainNewMoneyEnd}   ]]>
+            </if>
+            <if test="params.jingdainNewMoney != null and params.jingdainNewMoney != ''">
+                and a.jingdain_new_money = #{params.jingdainNewMoney}
+            </if>
+            <if test="params.jingdainClicknumStart != null  and params.jingdainClicknumStart != '' ">
+                <![CDATA[  and jingdain.jingdain_clicknum >= #{params.jingdainClicknumStart}   ]]>
+            </if>
+            <if test="params.jingdainClicknumEnd != null  and params.jingdainClicknumEnd != '' ">
+                <![CDATA[  and jingdain.jingdain_clicknum <= #{params.jingdainClicknumEnd}   ]]>
+            </if>
+            <if test="params.jingdainClicknum != null  and params.jingdainClicknum != '' ">
+                and jingdain.jingdain_clicknum = #{params.jingdainClicknum}
+            </if>
+            <if test=" params.jingdainContent != '' and params.jingdainContent != null and params.jingdainContent != 'null' ">
+                and jingdain.jingdain_content like CONCAT('%',#{params.jingdainContent},'%')
+            </if>
+            <if test="params.jingdainDeleteStart != null  and params.jingdainDeleteStart != '' ">
+                <![CDATA[  and jingdain.jingdain_delete >= #{params.jingdainDeleteStart}   ]]>
+            </if>
+            <if test="params.jingdainDeleteEnd != null  and params.jingdainDeleteEnd != '' ">
+                <![CDATA[  and jingdain.jingdain_delete <= #{params.jingdainDeleteEnd}   ]]>
+            </if>
+            <if test="params.jingdainDelete != null  and params.jingdainDelete != '' ">
+                and jingdain.jingdain_delete = #{params.jingdainDelete}
+            </if>
+            <if test=" params.insertTimeStart != '' and params.insertTimeStart != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(jingdain.insert_time) >= UNIX_TIMESTAMP(#{params.insertTimeStart}) ]]>
+            </if>
+            <if test=" params.insertTimeEnd != '' and params.insertTimeEnd != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(jingdain.insert_time) <= UNIX_TIMESTAMP(#{params.insertTimeEnd}) ]]>
+            </if>
+            <if test="params.insertTime != null and params.insertTime != ''">
+                and a.insert_time = #{params.insertTime}
+            </if>
+        </where>
+        order by a.${params.sort} ${params.order}
+    </select>
+
+</mapper>

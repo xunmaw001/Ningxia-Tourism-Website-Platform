@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.JingdainDao">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        a.id as id
+        ,a.jingdain_name as jingdainName
+        ,a.jingdain_uuid_number as jingdainUuidNumber
+        ,a.jingdain_photo as jingdainPhoto
+        ,a.jingdain_address as jingdainAddress
+        ,a.zan_number as zanNumber
+        ,a.cai_number as caiNumber
+        ,a.jingdain_types as jingdainTypes
+        ,a.jingdain_kucun_number as jingdainKucunNumber
+        ,a.jingdain_new_money as jingdainNewMoney
+        ,a.jingdain_clicknum as jingdainClicknum
+        ,a.jingdain_content as jingdainContent
+        ,a.jingdain_delete as jingdainDelete
+        ,a.insert_time as insertTime
+        ,a.create_time as createTime
+    </sql>
+    <select id="selectListView" parameterType="map" resultType="com.entity.view.JingdainView" >
+        SELECT
+        <include refid="Base_Column_List" />
+        <!-- 级联表的字段 -->
+
+        FROM jingdain  a
+
+        <where>
+            <if test="params.ids != null">
+                and a.id in
+                <foreach item="item" index="index" collection="params.ids" open="(" separator="," close=")">
+                #{item}
+                </foreach>
+            </if>
+            <if test=" params.jingdainName != '' and params.jingdainName != null and params.jingdainName != 'null' ">
+                and a.jingdain_name like CONCAT('%',#{params.jingdainName},'%')
+            </if>
+            <if test=" params.jingdainUuidNumber != '' and params.jingdainUuidNumber != null and params.jingdainUuidNumber != 'null' ">
+                and a.jingdain_uuid_number like CONCAT('%',#{params.jingdainUuidNumber},'%')
+            </if>
+            <if test=" params.jingdainAddress != '' and params.jingdainAddress != null and params.jingdainAddress != 'null' ">
+                and a.jingdain_address like CONCAT('%',#{params.jingdainAddress},'%')
+            </if>
+            <if test="params.zanNumberStart != null and params.zanNumberStart != ''">
+                <![CDATA[  and a.zan_number >= #{params.zanNumberStart}   ]]>
+            </if>
+            <if test="params.zanNumberEnd != null and params.zanNumberEnd != ''">
+                <![CDATA[  and a.zan_number <= #{params.zanNumberEnd}   ]]>
+            </if>
+             <if test="params.zanNumber != null and params.zanNumber != ''">
+                and a.zan_number = #{params.zanNumber}
+             </if>
+            <if test="params.caiNumberStart != null and params.caiNumberStart != ''">
+                <![CDATA[  and a.cai_number >= #{params.caiNumberStart}   ]]>
+            </if>
+            <if test="params.caiNumberEnd != null and params.caiNumberEnd != ''">
+                <![CDATA[  and a.cai_number <= #{params.caiNumberEnd}   ]]>
+            </if>
+             <if test="params.caiNumber != null and params.caiNumber != ''">
+                and a.cai_number = #{params.caiNumber}
+             </if>
+            <if test="params.jingdainTypes != null and params.jingdainTypes != ''">
+                and a.jingdain_types = #{params.jingdainTypes}
+            </if>
+            <if test="params.jingdainKucunNumberStart != null and params.jingdainKucunNumberStart != ''">
+                <![CDATA[  and a.jingdain_kucun_number >= #{params.jingdainKucunNumberStart}   ]]>
+            </if>
+            <if test="params.jingdainKucunNumberEnd != null and params.jingdainKucunNumberEnd != ''">
+                <![CDATA[  and a.jingdain_kucun_number <= #{params.jingdainKucunNumberEnd}   ]]>
+            </if>
+             <if test="params.jingdainKucunNumber != null and params.jingdainKucunNumber != ''">
+                and a.jingdain_kucun_number = #{params.jingdainKucunNumber}
+             </if>
+            <if test="params.jingdainNewMoneyStart != null ">
+                <![CDATA[  and a.jingdain_new_money >= #{params.jingdainNewMoneyStart}   ]]>
+            </if>
+            <if test="params.jingdainNewMoneyEnd != null ">
+                <![CDATA[  and a.jingdain_new_money <= #{params.jingdainNewMoneyEnd}   ]]>
+            </if>
+            <if test="params.jingdainNewMoney != null and params.jingdainNewMoney != ''">
+                and a.jingdain_new_money = #{params.jingdainNewMoney}
+            </if>
+            <if test="params.jingdainClicknumStart != null and params.jingdainClicknumStart != ''">
+                <![CDATA[  and a.jingdain_clicknum >= #{params.jingdainClicknumStart}   ]]>
+            </if>
+            <if test="params.jingdainClicknumEnd != null and params.jingdainClicknumEnd != ''">
+                <![CDATA[  and a.jingdain_clicknum <= #{params.jingdainClicknumEnd}   ]]>
+            </if>
+             <if test="params.jingdainClicknum != null and params.jingdainClicknum != ''">
+                and a.jingdain_clicknum = #{params.jingdainClicknum}
+             </if>
+            <if test=" params.jingdainContent != '' and params.jingdainContent != null and params.jingdainContent != 'null' ">
+                and a.jingdain_content like CONCAT('%',#{params.jingdainContent},'%')
+            </if>
+            <if test="params.jingdainDeleteStart != null and params.jingdainDeleteStart != ''">
+                <![CDATA[  and a.jingdain_delete >= #{params.jingdainDeleteStart}   ]]>
+            </if>
+            <if test="params.jingdainDeleteEnd != null and params.jingdainDeleteEnd != ''">
+                <![CDATA[  and a.jingdain_delete <= #{params.jingdainDeleteEnd}   ]]>
+            </if>
+             <if test="params.jingdainDelete != null and params.jingdainDelete != ''">
+                and a.jingdain_delete = #{params.jingdainDelete}
+             </if>
+            <if test=" params.insertTimeStart != '' and params.insertTimeStart != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(a.insert_time) >= UNIX_TIMESTAMP(#{params.insertTimeStart}) ]]>
+            </if>
+            <if test=" params.insertTimeEnd != '' and params.insertTimeEnd != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(a.insert_time) <= UNIX_TIMESTAMP(#{params.insertTimeEnd}) ]]>
+            </if>
+            <if test="params.insertTime != null and params.insertTime != ''">
+                and a.insert_time = #{params.insertTime}
+            </if>
+
+        </where>
+        order by a.${params.sort} ${params.order}
+    </select>
+
+</mapper>
